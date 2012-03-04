@@ -1,8 +1,14 @@
 package com.himanshu.webapp.server;
 
 import org.mortbay.jetty.Connector;
+import org.mortbay.jetty.Request;
+import org.mortbay.jetty.RequestLog;
+import org.mortbay.jetty.Response;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.handler.RequestLogHandler;
 import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.himanshu.webapp.context.DemoWebApp1;
 import com.himanshu.webapp.context.DemoWebApp2;
@@ -12,6 +18,8 @@ public class WebAppServer {
 	private int httpPort = 8080;
 	private DemoWebApp1 webApp1;
 	private DemoWebApp2 webApp2;
+	
+	Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	public void init() {
 		jettyServer = new Server();
@@ -24,6 +32,77 @@ public class WebAppServer {
 		webApp2 = new DemoWebApp2();
 		webApp1.init(jettyServer);
 		webApp2.init(jettyServer);
+		RequestLogHandler logHandler = new RequestLogHandler();
+		logHandler.setServer(jettyServer);
+		logHandler.setRequestLog(new RequestLog() {
+			
+			@Override
+			public void stop() throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void start() throws Exception {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void removeLifeCycleListener(Listener listener) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean isStopping() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isStopped() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isStarting() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isStarted() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isRunning() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean isFailed() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void addLifeCycleListener(Listener listener) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void log(Request request, Response response) {
+				LOG.debug("This is the debug message from request log handler");
+				
+			}
+		});
+		jettyServer.addHandler(logHandler);
 	}
 
 	private void initConnector() {
